@@ -81,7 +81,15 @@ def create_table(cur, conn):
     cur.execute('CREATE TABLE IF NOT EXISTS Covid (date DATE PRIMARY KEY, state TEXT, cases INTEGER)')
     conn.commit()
 
+def check_rows(cur, conn):
+    row_num = 0
+    cur.execute('SELECT * from Covid')
+    row_num = cur.fetchall()
+    return len(row_num)
+
 def add_data_to_table(big_data_dict, cur, conn):
+    current_row = check_rows(cur, conn)
+    target_rows = current_row + 25
     for date, small_dict in big_data_dict.items():
         date_val = date
         for state, cases in small_dict.items():
@@ -89,7 +97,7 @@ def add_data_to_table(big_data_dict, cur, conn):
             cases_value = cases
             cur.execute('INSERT OR IGNORE INTO Covid (date, state, cases) values (?,?,?)', (date_val, state_val, cases_value))
     conn.commit()
-
+# [current_row: target_rows] THIS NEEDS TO BE ADDED TO LIMIT DATA TO 25 SOMEWHERE 
 
 # # TASK 2: GET TEMP AND CASES INFO JOINED
 def connect_temp_and_covid_by_date(cur, conn):
