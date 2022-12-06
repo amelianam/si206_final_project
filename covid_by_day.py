@@ -88,16 +88,20 @@ def check_rows(cur, conn):
     return len(row_num)
 
 def add_data_to_table(big_data_dict, cur, conn):
-    current_row = check_rows(cur, conn)
-    target_rows = current_row + 25
-    for date, small_dict in big_data_dict.items():
+    current_rows = check_rows(cur, conn)
+    target_rows = current_rows + 25
+    if target_rows > len(big_data_dict):
+        target_rows = len(big_data_dict)
+    data_list = list(big_data_dict.items())
+    for num in range(current_rows, target_rows):
+        date, small_dict = data_list[num]
         date_val = date
         for state, cases in small_dict.items():
             state_val = state
             cases_value = cases
             cur.execute('INSERT OR IGNORE INTO Covid (date, state, cases) values (?,?,?)', (date_val, state_val, cases_value))
     conn.commit()
-# [current_row: target_rows] THIS NEEDS TO BE ADDED TO LIMIT DATA TO 25 SOMEWHERE 
+# [current_rows: target_rows] THIS NEEDS TO BE ADDED TO LIMIT DATA TO 25 SOMEWHERE 
 
 # # TASK 2: GET TEMP AND CASES INFO JOINED
 def connect_temp_and_covid_by_date(cur, conn):
@@ -108,6 +112,7 @@ def connect_temp_and_covid_by_date(cur, conn):
 
 # def calculate_SOMETHING(list_of_matches):
 #     calculate_something_here
+
 
 
 def main(state, date_list):
@@ -121,3 +126,6 @@ main('mi', our_dates)
 # test = single_date_data_dictionary('mi', our_dates)
 # print('TEST FULL DICT ')
 # print(test)
+
+# github link https://github.com/amelianam/si206_final_project.git
+
