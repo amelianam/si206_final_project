@@ -134,48 +134,70 @@ def main(database_name, state, date_list):
 def connect_temp_and_covid_by_date(cur, conn):
     cur.execute('SELECT Temperature.date, Temperature.avg_temp, Covid.cases FROM Covid JOIN Temperature ON Temperature.date = Covid.date')
     list_of_matches = cur.fetchall()
+    fall_case_total = 0
+    winter_case_total = 0
+    spring_case_total = 0
+    summer_case_total = 0
+    fall_temp_days = 0 
+    fall_temp_total = 0
+    summer_temp_days = 0 
+    summer_temp_total = 0
+    spring_temp_days = 0 
+    spring_temp_total = 0
+    winter_temp_days = 0 
+    winter_temp_total = 0
+
     for tup in list_of_matches:
         date = tup[0]
         avg_temp = tup[1]
         cases = tup[2]
         month = date.split('-')[1]
-        fall_case_total = 0
-        winter_case_total = 0
-        spring_case_total = 0
-        summer_case_total = 0
         state_cases_season_dict = {}
         if month in spring:
+            spring_temp_days += 1
+            spring_temp_total += avg_temp
             spring_case_total += cases
             season = 'spring'
-            if season not in state_cases_season_dict.items():
+            if season not in state_cases_season_dict.keys():
                 state_cases_season_dict[season] = spring_case_total
             else:
                 state_cases_season_dict[season].update(spring_case_total)
         elif month in summer:
+            summer_temp_days += 1
+            summer_temp_total += avg_temp
             summer_case_total += cases
             season = 'summer'
-            if season not in state_cases_season_dict.items():
+            if season not in state_cases_season_dict.keys():
                 state_cases_season_dict[season] = summer_case_total
             else:
                 state_cases_season_dict[season].update(summer_case_total)
         elif month in winter:
+            winter_temp_days += 1
+            winter_temp_total += avg_temp
             winter_case_total += cases
             season = 'winter'
-            if season not in state_cases_season_dict.items():
+            if season not in state_cases_season_dict.keys():
                 state_cases_season_dict[season] = winter_case_total
             else:
                 state_cases_season_dict[season].update(winter_case_total)
         else:
+            fall_temp_days += 1
+            fall_temp_total += avg_temp
             fall_case_total += cases
             season = 'fall'
-            if season not in state_cases_season_dict.items():
+            if season not in state_cases_season_dict.keys():
                 state_cases_season_dict[season] = fall_case_total
             else:
                 state_cases_season_dict[season].update(fall_case_total)
     print(state_cases_season_dict)
+
+
+
     return state_cases_season_dict
 
-
+def visualization(season_dict):
+    seasons = season_dict.keys()
+    temp_cases = season_dict.values()
 
 main('Covid_Temp_Animals.db', 'mi', our_dates)
 
@@ -188,37 +210,3 @@ summer = ['06', '07', '08']
 fall = ['09', '10', '11']
 winter = ['12', '01', '02']
 
-
-def cases_by_season_per_state(full_list_of_dicts):
-    state_cases_season_dict = {}
-    fall_case_total = 0
-    winter_case_total = 0
-    spring_case_total = 0
-    summer_case_total = 0
-    for dict in full_list_of_dicts:
-        for state, small_dict in dict.items():
-            for date, cases in small_dict.items():
-                month = date.split('-')[1]
-                small_dict = {}
-                if month in spring:
-                    spring_case_total += cases
-                    season = 'spring'
-                    small_dict[season] = spring_case_total
-                elif month in summer:
-                    summer_case_total += cases
-                    season = 'summer'
-                    small_dict[season] = summer_case_total
-                elif month in winter:
-                    winter_case_total += cases
-                    season = 'winter'
-                    small_dict[season] = winter_case_total
-                else:
-                    fall_case_total += cases
-                    season = 'fall'
-                    small_dict[season] = fall_case_total
-                if state not in state_cases_season_dict:
-                    state_cases_season_dict[state] = small_dict
-                else:
-                    if season not in state_cases_season_dict.values():
-                        state_cases_season_dict[state].update(small_dict)
-    return state_cases_season_dict
