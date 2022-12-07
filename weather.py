@@ -12,8 +12,8 @@ our_dates = ['2020-04-02', '2020-04-04', '2020-04-06', '2020-04-08','2020-04-10'
 
 our_states = ['Michigan', 'California', 'Colorado', 'Florida', 'Illinois', 'Ohio', 'Texas', 'Massachusetts', 'Georgia', 'Hawaii']
 
-def get_data(state, date_iso):
-    url = f' http://api.weatherstack.com/historical?access_key=c94d102ae8f92a29c04bdeb3a7b41a82&query={state}&historical_date={date_iso}&hourly=1'
+def get_data(region, date_iso):
+    url = f' http://api.weatherstack.com/historical?access_key=c94d102ae8f92a29c04bdeb3a7b41a82&query={region}&historical_date={date_iso}&hourly=1'
     r = requests.get(url)
     r_text = r.text
     data = json.loads(r_text)
@@ -86,10 +86,10 @@ def addition_data(data_dict, cur, conn):
         cur.execute('INSERT OR IGNORE INTO Temperature (date, state, avg_temp, temp) values (?,?,?,?)', (date_value, state, avg_temp, temp))
     conn.commit()
 
-def main(region, date_list):
+def main(database_name, region, date_list):
     full_data = get_specific_data(region, date_list)
-    cur, conn = setUpDatabase('Covid_Temp_Animals.db')
+    cur, conn = setUpDatabase(database_name)
     create_table(cur, conn)
     addition_data(full_data, cur, conn)
 
-main('Detroit', our_dates)
+main('Covid_Temp_Animals', 'Detroit', our_dates)

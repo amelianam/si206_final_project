@@ -103,21 +103,15 @@ def add_data_to_table(big_data_dict, cur, conn):
     conn.commit()
 # [current_rows: target_rows] THIS NEEDS TO BE ADDED TO LIMIT DATA TO 25 SOMEWHERE 
 
-# # TASK 2: GET TEMP AND CASES INFO JOINED
-def connect_temp_and_covid_by_date(cur, conn):
-    cur.execute('SELECT Temperature.date, Temperature.state, Temperature.avg_temp, Covid.date, Covid.state, Covid.cases FROM Covid JOIN Temperature ON Temp.date = Covid.date')
-    list_of_matches = cur.fetchall()
-    return list_of_matches
-
 
 # def calculate_SOMETHING(list_of_matches):
 #     calculate_something_here
 
 
 
-def main(state, date_list):
+def main(database_name, state, date_list):
     full_data_in_list = single_date_data_dictionary(state, date_list)
-    cur, conn = setUpDatabase('Covid_Temp_Animals.db')
+    cur, conn = setUpDatabase(database_name)
     create_table(cur, conn)
     add_data_to_table(full_data_in_list, cur, conn)
 
@@ -129,3 +123,8 @@ main('mi', our_dates)
 
 # github link https://github.com/amelianam/si206_final_project.git
 
+# # TASK 2: GET TEMP AND CASES INFO JOINED
+def connect_temp_and_covid_by_date(cur, conn):
+    cur.execute('SELECT Temperature.date, Temperature.state, Temperature.avg_temp, Covid.date, Covid.state, Covid.cases FROM Covid JOIN Temperature ON Temp.date = Covid.date')
+    list_of_matches = cur.fetchall()
+    return list_of_matches
