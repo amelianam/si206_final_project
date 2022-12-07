@@ -9,6 +9,13 @@ import matplotlib.pyplot as plt
 #state code should be two letter, lowercase
 #date_iso should be year, month, day 
 
+
+
+spring = ['03', '04', '05']
+summer = ['06', '07', '08']
+fall = ['09', '10', '11']
+winter = ['12', '01', '02']
+
 our_dates = ['2020-04-02', '2020-04-04', '2020-04-06', '2020-04-08','2020-04-10','2020-04-12','2020-04-14', '2020-04-16', '2020-04-18', '2020-04-20','2020-04-22','2020-04-24', '2020-04-26', '2020-04-28','2020-04-30','2020-05-02', '2020-05-04', '2020-05-06', '2020-05-08','2020-05-10','2020-05-12','2020-05-14', '2020-05-16', '2020-05-18', '2020-05-20','2020-05-22','2020-05-24', '2020-05-26', '2020-05-28','2020-05-30', '2020-06-02', '2020-06-04', '2020-06-06', '2020-06-08','2020-06-10','2020-06-12','2020-06-14', '2020-06-16', '2020-06-18', '2020-06-20','2020-06-22','2020-06-24', '2020-06-26', '2020-06-28','2020-06-30','2020-07-02', '2020-07-04', '2020-07-06', '2020-07-08','2020-07-10','2020-07-12','2020-07-14', '2020-07-16', '2020-07-18', '2020-07-20','2020-07-22','2020-07-24', '2020-07-26', '2020-07-28','2020-07-30','2020-08-02', '2020-08-04', '2020-08-06', '2020-08-08','2020-08-10','2020-08-12','2020-08-14', '2020-08-16', '2020-08-18', '2020-08-20','2020-08-22','2020-08-24', '2020-08-26', '2020-08-28','2020-08-30', '2020-09-02', '2020-09-04', '2020-09-06', '2020-09-08','2020-09-10','2020-09-12','2020-09-14', '2020-09-16', '2020-09-18', '2020-09-20','2020-09-22','2020-09-24', '2020-09-26', '2020-09-28','2020-09-30','2020-10-02', '2020-10-04', '2020-10-06', '2020-10-08','2020-10-10','2020-10-12','2020-10-14', '2020-10-16', '2020-10-18', '2020-10-20','2020-10-22','2020-10-24', '2020-10-26', '2020-10-28','2020-10-30','2020-11-02', '2020-11-04', '2020-11-06', '2020-11-08','2020-11-10','2020-11-12','2020-11-14', '2020-11-16', '2020-11-18', '2020-11-20','2020-11-22','2020-11-24', '2020-11-26', '2020-11-28','2020-11-30', '2020-10-02', '2020-12-04', '2020-12-06', '2020-12-08','2020-12-10','2020-12-12','2020-12-14', '2020-12-16', '2020-12-18', '2020-12-20','2020-12-22','2020-12-24', '2020-12-26', '2020-12-28','2020-12-30' ]
 
 state_list = ['mi', 'ca', 'co', 'fl']
@@ -114,8 +121,8 @@ def main(database_name, state, date_list):
     cur, conn = setUpDatabase(database_name)
     create_table(cur, conn)
     add_data_to_table(full_data_in_list, cur, conn)
+    connect_temp_and_covid_by_date(cur, conn)
 
-main('mi', our_dates)
 
 # test = single_date_data_dictionary('mi', our_dates)
 # print('TEST FULL DICT ')
@@ -125,6 +132,93 @@ main('mi', our_dates)
 
 # # TASK 2: GET TEMP AND CASES INFO JOINED
 def connect_temp_and_covid_by_date(cur, conn):
-    cur.execute('SELECT Temperature.date, Temperature.state, Temperature.avg_temp, Covid.date, Covid.state, Covid.cases FROM Covid JOIN Temperature ON Temp.date = Covid.date')
+    cur.execute('SELECT Temperature.date, Temperature.avg_temp, Covid.cases FROM Covid JOIN Temperature ON Temperature.date = Covid.date')
     list_of_matches = cur.fetchall()
-    return list_of_matches
+    for tup in list_of_matches:
+        date = tup[0]
+        avg_temp = tup[1]
+        cases = tup[2]
+        month = date.split('-')[1]
+        fall_case_total = 0
+        winter_case_total = 0
+        spring_case_total = 0
+        summer_case_total = 0
+        state_cases_season_dict = {}
+        if month in spring:
+            spring_case_total += cases
+            season = 'spring'
+            if season not in state_cases_season_dict.items():
+                state_cases_season_dict[season] = spring_case_total
+            else:
+                state_cases_season_dict[season].update(spring_case_total)
+        elif month in summer:
+            summer_case_total += cases
+            season = 'summer'
+            if season not in state_cases_season_dict.items():
+                state_cases_season_dict[season] = summer_case_total
+            else:
+                state_cases_season_dict[season].update(summer_case_total)
+        elif month in winter:
+            winter_case_total += cases
+            season = 'winter'
+            if season not in state_cases_season_dict.items():
+                state_cases_season_dict[season] = winter_case_total
+            else:
+                state_cases_season_dict[season].update(winter_case_total)
+        else:
+            fall_case_total += cases
+            season = 'fall'
+            if season not in state_cases_season_dict.items():
+                state_cases_season_dict[season] = fall_case_total
+            else:
+                state_cases_season_dict[season].update(fall_case_total)
+    print(state_cases_season_dict)
+    return state_cases_season_dict
+
+
+
+main('Covid_Temp_Animals.db', 'mi', our_dates)
+
+
+
+
+
+spring = ['03', '04', '05']
+summer = ['06', '07', '08']
+fall = ['09', '10', '11']
+winter = ['12', '01', '02']
+
+
+def cases_by_season_per_state(full_list_of_dicts):
+    state_cases_season_dict = {}
+    fall_case_total = 0
+    winter_case_total = 0
+    spring_case_total = 0
+    summer_case_total = 0
+    for dict in full_list_of_dicts:
+        for state, small_dict in dict.items():
+            for date, cases in small_dict.items():
+                month = date.split('-')[1]
+                small_dict = {}
+                if month in spring:
+                    spring_case_total += cases
+                    season = 'spring'
+                    small_dict[season] = spring_case_total
+                elif month in summer:
+                    summer_case_total += cases
+                    season = 'summer'
+                    small_dict[season] = summer_case_total
+                elif month in winter:
+                    winter_case_total += cases
+                    season = 'winter'
+                    small_dict[season] = winter_case_total
+                else:
+                    fall_case_total += cases
+                    season = 'fall'
+                    small_dict[season] = fall_case_total
+                if state not in state_cases_season_dict:
+                    state_cases_season_dict[state] = small_dict
+                else:
+                    if season not in state_cases_season_dict.values():
+                        state_cases_season_dict[state].update(small_dict)
+    return state_cases_season_dict
