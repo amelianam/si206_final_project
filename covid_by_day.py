@@ -124,8 +124,8 @@ def main(database_name, state, date_list):
     add_data_to_table(full_data_in_list, cur, conn)
     connected_data_dict_avg = connect_avg_temp_and_covid_by_date(cur, conn)
     visualization(connected_data_dict_avg)
-    # connected_data_dict_normal = connect_avg_temp_and_covid_by_date(cur, conn)
-    # visualization(connected_data_dict_normal)
+    connected_data_dict_normal = connect_normal_temp_and_covid_by_date(cur, conn)
+    visualization2(connected_data_dict_normal)
 
 
 
@@ -233,18 +233,41 @@ def visualization(season_dict):
         avg_temp = item[1]
         temp_list.append(avg_temp)
         cases_list.append(cases)
-    figure = plt.figure(figsize= (13,8))
+    figure = plt.figure(figsize= (10,6))
     colors = ['magenta', 'springgreen', 'orangered', 'c']
     for i in range(len(temp_list)):
         plt.scatter(temp_list[i], cases_list[i], s=120, color = colors[i], label = seasons[i]) #, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
-        plt.annotate(seasons[i], (temp_list[i], cases_list[i] + 150000), horizontalalignment='center')
+        plt.annotate(cases_list[i], (temp_list[i], cases_list[i] + 150000), horizontalalignment='center')
     plt.xlabel("Temperature (degrees fahrenheit)")
     plt.ylabel("Number of Covid Cases")
-    plt.title("Number of Covid Cases based on Average Temperature for Each Season")
+    plt.title("Number of Covid Cases \n based on Average Temperature for Each Season")
     plt.legend()
     plt.show()
     # averages
 
+def visualization2(season_dict):
+    season_list = []
+    temp_list = []
+    cases_list = []
+    seasons = list(season_dict.keys())
+    for season in seasons:
+        season_list.append(season)
+    temp_cases = season_dict.values()
+    for item in temp_cases:
+        cases = item[0] 
+        normal_temp = item[1]
+        temp_list.append(normal_temp)
+        cases_list.append(cases)
+    figure = plt.figure(figsize= (10,6))
+    colors = ['magenta', 'springgreen', 'orangered', 'c']
+    for i in range(len(temp_list)):
+        plt.scatter(temp_list[i], cases_list[i], s=120, color = colors[i], label = seasons[i]) #, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
+        plt.annotate(cases_list[i], (temp_list[i], cases_list[i] + 150000), horizontalalignment='center')
+    plt.xlabel("Temperature (degrees fahrenheit)")
+    plt.ylabel("Number of Covid Cases")
+    plt.title("Number of Covid Cases based on Temperature  \n at Midnight for Each Season")
+    plt.legend()
+    plt.show()
 
 main('Covid_Temp_Animals.db', 'mi', our_dates)
 
