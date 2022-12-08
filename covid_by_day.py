@@ -224,7 +224,7 @@ def visualization(season_dict):
     season_list = []
     temp_list = []
     cases_list = []
-    seasons = season_dict.keys()
+    seasons = list(season_dict.keys())
     for season in seasons:
         season_list.append(season)
     temp_cases = season_dict.values()
@@ -234,11 +234,13 @@ def visualization(season_dict):
         temp_list.append(avg_temp)
         cases_list.append(cases)
     figure = plt.figure(figsize= (8,8))
-    colors = ['m-', 'g-', 'r-', 'c-']
-    plt.bar(season_list, cases_list, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
+    colors = ['b', 'g', 'r', 'black']
+    for i in range(len(temp_list)):
+        plt.scatter(temp_list[i], cases_list[i], s=30, color = colors[i], label = seasons[i]) #, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
     plt.xlabel("Seasons")
     plt.ylabel("Average Temperature")
     plt.title("Number of Covid Cases for Each Season")
+    plt.legend()
     plt.show()
     # averages
 
