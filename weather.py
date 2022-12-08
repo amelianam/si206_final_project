@@ -81,9 +81,9 @@ def addition_data(data_dict, cur, conn):
         date, info_list = data_list[number]
         date_value = date
         state = info_list[0]
-        avg_temp = info_list[1]
-        temp = info_list[2]
-        cur.execute('INSERT OR IGNORE INTO Temperature (date, state, avg_temp, temp) values (?,?,?,?)', (date_value, state, avg_temp, temp))
+        avg_temp = (info_list[1] * 9/5 ) +32
+        temp = (info_list[2] * 9/5 ) +32
+        cur.execute('INSERT OR IGNORE INTO Temperature (date, avg_temp, temp) values (?,?,?)', (date_value, avg_temp, temp))
     conn.commit()
 
 def main(database_name, region, date_list):
@@ -92,7 +92,7 @@ def main(database_name, region, date_list):
     create_table(cur, conn)
     addition_data(full_data, cur, conn)
 
-main('Covid_Temp_Animals', 'Detroit', our_dates)
+main('Covid_Temp_Animals.db', 'Detroit', our_dates)
 
 
 
