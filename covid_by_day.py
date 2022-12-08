@@ -130,11 +130,11 @@ def main(database_name, state, date_list):
 
 
 
-test = single_date_data_dictionary('mi', our_dates)
-print('TEST FULL DICT ')
-print(test)
+# test = single_date_data_dictionary('mi', our_dates)
+# print('TEST FULL DICT ')
+# print(test)
 
-github link https://github.com/amelianam/si206_final_project.git
+# github link https://github.com/amelianam/si206_final_project.git
 
 # TASK 2: GET TEMP AND CASES INFO JOINED
 def connect_avg_temp_and_covid_by_date(cur, conn):
@@ -216,7 +216,7 @@ def connect_normal_temp_and_covid_by_date(cur, conn):
         normal_return_dict[season][1] = round(final_normal_temp, 2)
     for season, cases in seasons_cases_dict.items():
         normal_return_dict[season][0] = cases
-    print(normal_return_dict)
+    # print(normal_return_dict)
     return normal_return_dict
 
 
