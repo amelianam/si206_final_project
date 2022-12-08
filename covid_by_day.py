@@ -122,8 +122,11 @@ def main(database_name, state, date_list):
     cur, conn = setUpDatabase(database_name)
     create_table(cur, conn)
     add_data_to_table(full_data_in_list, cur, conn)
-    connected_data_dict = connect_temp_and_covid_by_date(cur, conn)
-    visualization(connected_data_dict)
+    connected_data_dict_avg = connect_avg_temp_and_covid_by_date(cur, conn)
+    visualization(connected_data_dict_avg)
+    # connected_data_dict_normal = connect_avg_temp_and_covid_by_date(cur, conn)
+    # visualization(connected_data_dict_normal)
+
 
 
 
@@ -134,7 +137,7 @@ def main(database_name, state, date_list):
 # github link https://github.com/amelianam/si206_final_project.git
 
 # # TASK 2: GET TEMP AND CASES INFO JOINED
-def connect_temp_and_covid_by_date(cur, conn):
+def connect_avg_temp_and_covid_by_date(cur, conn):
     cur.execute('SELECT Temperature.date, Temperature.avg_temp, Covid.cases FROM Covid JOIN Temperature ON Temperature.date = Covid.date')
     list_of_matches = cur.fetchall()
     seasons_cases_dict = {'spring': 0, 'summer': 0, 'fall': 0, 'winter': 0}
@@ -172,8 +175,49 @@ def connect_temp_and_covid_by_date(cur, conn):
         return_dict[season][1] = round(final_avg_temp, 2)
     for season, cases in seasons_cases_dict.items():
         return_dict[season][0] = cases
-    print(return_dict)
     return return_dict
+
+
+def connect_normal_temp_and_covid_by_date(cur, conn):
+    cur.execute('SELECT Temperature.date, Temperature.temp, Covid.cases FROM Covid JOIN Temperature ON Temperature.date = Covid.date')
+    list_of_matches = cur.fetchall()
+    seasons_cases_dict = {'spring': 0, 'summer': 0, 'fall': 0, 'winter': 0}
+    normal_return_dict = {'spring': [0, 0], 'summer': [0, 0], 'fall': [0, 0], 'winter': [0, 0]}
+    seasons_normal_temp_and_days_dict = {'spring': [0, 0], 'summer': [0, 0], 'fall': [0, 0], 'winter': [0, 0]}
+    spring = ['03', '04', '05']
+    summer = ['06', '07', '08']
+    fall = ['09', '10', '11']
+    winter = ['12', '01', '02']
+    for tup in list_of_matches:
+        date = tup[0]
+        normal_temp = tup[1]
+        cases = tup[2]
+        month = date.split('-')[1]
+        if month in spring:
+            seasons_cases_dict['spring'] += cases
+            seasons_normal_temp_and_days_dict['spring'][0] += normal_temp
+            seasons_normal_temp_and_days_dict['spring'][1] += 1
+        elif month in summer:
+            seasons_cases_dict['summer'] += cases
+            seasons_normal_temp_and_days_dict['summer'][0] += normal_temp
+            seasons_normal_temp_and_days_dict['summer'][1] += 1
+        elif month in winter:
+            seasons_cases_dict['winter'] += cases
+            seasons_normal_temp_and_days_dict['winter'][0] += normal_temp
+            seasons_normal_temp_and_days_dict['winter'][1] += 1
+        elif month in fall:
+            seasons_cases_dict['fall'] += cases
+            seasons_normal_temp_and_days_dict['fall'][0] += normal_temp
+            seasons_normal_temp_and_days_dict['fall'][1] += 1
+    for season, value in seasons_normal_temp_and_days_dict.items():
+        total_temp = value[0]
+        total_days = value[1]
+        final_normal_temp = total_temp/total_days
+        normal_return_dict[season][1] = round(final_normal_temp, 2)
+    for season, cases in seasons_cases_dict.items():
+        normal_return_dict[season][0] = cases
+    print(normal_return_dict)
+    return normal_return_dict
 
 
 def visualization(season_dict):
@@ -196,6 +240,7 @@ def visualization(season_dict):
     plt.ylabel("Average Temperature")
     plt.title("Number of Covid Cases for Each Season")
     plt.show()
+    # averages
 
 
 main('Covid_Temp_Animals.db', 'mi', our_dates)
