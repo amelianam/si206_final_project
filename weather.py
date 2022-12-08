@@ -62,7 +62,7 @@ def setUpDatabase(database_name):
 # Table for weather info
 
 def create_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS Temperature (date DATE PRIMARY KEY, state TEXT, avg_temp INTEGER, temp INTEGER)')
+    cur.execute('CREATE TABLE IF NOT EXISTS Temperature (date DATE PRIMARY KEY, avg_temp INTEGER, temp INTEGER)')
     conn.commit()
 
 def check_rows(cur, conn):
@@ -93,3 +93,8 @@ def main(database_name, region, date_list):
     addition_data(full_data, cur, conn)
 
 main('Covid_Temp_Animals', 'Detroit', our_dates)
+
+
+
+
+

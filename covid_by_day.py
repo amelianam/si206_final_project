@@ -85,7 +85,7 @@ def setUpDatabase(db_name):
 
 # # # CREATE TABLE FOR EMPLOYEE INFORMATION IN DATABASE AND ADD INFORMATION
 def create_table(cur, conn):
-    cur.execute('CREATE TABLE IF NOT EXISTS Covid (date DATE PRIMARY KEY, state TEXT, cases INTEGER)')
+    cur.execute('CREATE TABLE IF NOT EXISTS Covid (date DATE PRIMARY KEY, cases INTEGER)')
     conn.commit()
 
 def check_rows(cur, conn):
@@ -106,7 +106,7 @@ def add_data_to_table(big_data_dict, cur, conn):
         for state, cases in small_dict.items():
             state_val = state
             cases_value = cases
-            cur.execute('INSERT OR IGNORE INTO Covid (date, state, cases) values (?,?,?)', (date_val, state_val, cases_value))
+            cur.execute('INSERT OR IGNORE INTO Covid (date, cases) values (?,?)', (date_val, cases_value))
     conn.commit()
 # [current_rows: target_rows] THIS NEEDS TO BE ADDED TO LIMIT DATA TO 25 SOMEWHERE 
 
@@ -177,7 +177,8 @@ def visualization(season_dict):
     seasons = season_dict.keys()
     temp_cases = season_dict.values()
 
-main('Covid_Temp_Animals.db', 'mi', our_dates)
+# main('Covid_Temp_Animals.db', 'mi', our_dates)
+main('Test_Table.db', 'mi', our_dates)
 
 
 
