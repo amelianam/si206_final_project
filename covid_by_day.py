@@ -5,6 +5,7 @@ import requests
 import sqlite3
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 #state code should be two letter, lowercase
 #date_iso should be year, month, day 
@@ -121,7 +122,9 @@ def main(database_name, state, date_list):
     cur, conn = setUpDatabase(database_name)
     create_table(cur, conn)
     add_data_to_table(full_data_in_list, cur, conn)
-    connect_temp_and_covid_by_date(cur, conn)
+    connected_data_dict = connect_temp_and_covid_by_date(cur, conn)
+    visualization(connected_data_dict)
+
 
 
 # test = single_date_data_dictionary('mi', our_dates)
@@ -174,11 +177,28 @@ def connect_temp_and_covid_by_date(cur, conn):
 
 
 def visualization(season_dict):
+    season_list = []
+    temp_list = []
+    cases_list = []
     seasons = season_dict.keys()
+    for season in seasons:
+        season_list.append(season)
     temp_cases = season_dict.values()
+    for item in temp_cases:
+        cases = item[0] 
+        avg_temp = item[1]
+        temp_list.append(avg_temp)
+        cases_list.append(cases)
+    figure = plt.figure(figsize= (8,8))
+    colors = ['m-', 'g-', 'r-', 'c-']
+    plt.bar(season_list, cases_list, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
+    plt.xlabel("Seasons")
+    plt.ylabel("Average Temperature")
+    plt.title("Number of Covid Cases for Each Season")
+    plt.show()
 
-# main('Covid_Temp_Animals.db', 'mi', our_dates)
-main('Test_Table.db', 'mi', our_dates)
+
+main('Covid_Temp_Animals.db', 'mi', our_dates)
 
 
 
