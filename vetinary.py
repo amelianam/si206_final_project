@@ -125,10 +125,10 @@ def visualization1(data_list):
     for num in range(len(xaxis)):
         plt.scatter(xaxis[num], yaxis[num], s=30)
     
-    plt.text(10, 360, "*Color does not have\nany meaning,\nsimply added\nfor visual purposes", weight = 'semibold')
-    plt.xlabel("Temperature (degrees fahrenheit)")
+    plt.text(10, 330, "*Color does not have\nany meaning,\nsimply added\nfor visual purposes", weight = 'semibold')
+    plt.xlabel("Temperature (Degrees Fahrenheit)")
     plt.ylabel("Number of Vetinary Cases")
-    plt.title("Number of Vetinary Cases \n based on the Difference in Average Temperature \n and Midnight Temperature")
+    plt.title("Number of Vetinary Cases \n based on the\nDaily Temperature Differences")
     plt.show()
 
     
@@ -162,7 +162,7 @@ def get_graph2_data(cur, conn):
 
 def visualization2(list_data):
     #get x,y data, colors, and months
-    months_list = ['April', 'July', 'October', 'December']
+    months_list = ['April = Spring', 'July = Summer', 'October = Fall', 'December = Winter']
     x_data = list_data[0]
     y_data = list_data[1]
     color_list = ['magenta', 'springgreen', 'orangered', 'c']
@@ -172,7 +172,7 @@ def visualization2(list_data):
     for num in range(len(months_list)):
         plt.scatter(x_data[num], y_data[num], s=120, color = color_list[num], label = months_list[num])
         plt.annotate(y_data[num], (x_data[num], y_data[num] + 1), horizontalalignment='center')
-    plt.xlabel("Temperature (degrees fahrenheit)")
+    plt.xlabel("Temperature (Degrees Fahrenheit)")
     plt.ylabel("Number of Vetinary Cases")
     plt.title("Number of Vetinary Cases \n based on Average Temperature for Each Season")
     plt.legend()
@@ -202,10 +202,10 @@ if __name__ == '__main__':
     storedb(cur, conn, databaseDict)
 
     # #get data to plot visualization 1
-    # data1 = get_graph_data(cur, conn)
+    data1 = get_graph_data(cur, conn)
    
     # #plot visualization 1
-    # visualization1(data1)
+    visualization1(data1)
 
     #get data to plot visualization 2
     data2 = get_graph2_data(cur, conn)
