@@ -268,7 +268,7 @@ def visualization2(season_dict):
         plt.scatter(temp_list[i], cases_list[i], s=120, color = colors[i], label = seasons[i]) #, width = 0.4, color = colors, linewidth = 2, edgecolor = "black")
         plt.annotate(cases_list[i], (temp_list[i], cases_list[i] + 150000), horizontalalignment='center')
         plt.annotate(temp_list[0], (temp_list[0], cases_list[0] + 500000), horizontalalignment='left')
-
+        plt.annotate(temp_list[i], (temp_list[i], cases_list[i] - 450000), horizontalalignment='center')
     plt.xlabel("Temperature (degrees fahrenheit)")
     plt.ylabel("Number of Covid Cases")
     plt.title("Number of Covid Cases based on Temperature  \n at Midnight for Each Season")
