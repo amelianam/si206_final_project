@@ -126,9 +126,9 @@ def visualization1(data_list):
         plt.scatter(xaxis[num], yaxis[num], s=30)
     
     plt.text(10, 330, "*Color does not have\nany meaning,\nsimply added\nfor visual purposes", weight = 'semibold')
-    plt.xlabel("Temperature (Degrees Fahrenheit)")
-    plt.ylabel("Number of Vetinary Cases")
-    plt.title("Number of Vetinary Cases \n based on the\nDaily Temperature Differences")
+    plt.xlabel("Daily Temperature Difference(Degrees Fahrenheit)")
+    plt.ylabel("Number of Veterinary Cases")
+    plt.title("Number of Veterinary Cases \n based on the\nDaily Temperature Differences")
     plt.show()
 
     
@@ -172,9 +172,9 @@ def visualization2(list_data):
     for num in range(len(months_list)):
         plt.scatter(x_data[num], y_data[num], s=120, color = color_list[num], label = months_list[num])
         plt.annotate(y_data[num], (x_data[num], y_data[num] + 1), horizontalalignment='center')
-    plt.xlabel("Temperature (Degrees Fahrenheit)")
-    plt.ylabel("Number of Vetinary Cases")
-    plt.title("Number of Vetinary Cases \n based on Average Temperature for Each Season")
+    plt.xlabel("Average Temperature (Degrees Fahrenheit)")
+    plt.ylabel("Average Number of Veterinary Cases")
+    plt.title("Number of Veterinary Cases \n based on Average Temperature for Each Season")
     plt.legend()
     plt.show()
 
