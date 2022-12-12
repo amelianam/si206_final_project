@@ -115,7 +115,9 @@ def add_data_to_table(big_data_dict, cur, conn):
 # def calculate_SOMETHING(list_of_matches):
 #     calculate_something_here
 
-
+def create_file(file_name, data_dictionary):
+    with open(file_name, 'w') as convert_file:
+        convert_file.write(json.dumps(data_dictionary))
 
 def main(database_name, state, date_list):
     full_data_in_list = single_date_data_dictionary(state, date_list)
@@ -124,9 +126,11 @@ def main(database_name, state, date_list):
     add_data_to_table(full_data_in_list, cur, conn)
 
     connected_data_dict_avg = connect_avg_temp_and_covid_by_date(cur, conn)
+    create_file("Avg_Temp_vs_Covid.txt", connected_data_dict_avg)
     visualization(connected_data_dict_avg)
 
     connected_data_dict_normal = connect_normal_temp_and_covid_by_date(cur, conn)
+    create_file("Normal_Temp_vs_Covid.txt", connected_data_dict_normal)
     visualization2(connected_data_dict_normal)
 
 
