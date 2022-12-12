@@ -114,6 +114,7 @@ def get_graph_data(cur, conn):
 
 
 
+
 def visualization1(data_list):
     # get x,y data
     xaxis = data_list[0]
@@ -178,6 +179,10 @@ def visualization2(list_data):
     plt.legend()
     plt.show()
 
+def create_file(file_name, data_dictionary):
+    with open(file_name, 'w') as convert_file:
+        convert_file.write(json.dumps(data_dictionary))
+
 # main function
 if __name__ == '__main__':
     databaseDict = {}
@@ -203,12 +208,21 @@ if __name__ == '__main__':
 
     # #get data to plot visualization 1
     data1 = get_graph_data(cur, conn)
+
+    #write dictionary as txt
+    create_file("Daily_Temp_Difference_vs_Cases.txt", data1)
    
-    # #plot visualization 1
+    # plot visualization 1
     visualization1(data1)
 
     #get data to plot visualization 2
     data2 = get_graph2_data(cur, conn)
+
+    #write dictionary as txt
+    create_file("Seasonal_Temp_vs_Cases.txt", data2)
     
     #plot visualization 2
     visualization2(data2)
+
+    
+    
